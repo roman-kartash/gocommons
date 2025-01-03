@@ -1,0 +1,35 @@
+name: testing
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  testing:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Set up Go"
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+
+      - name: "Show version"
+        run: go version
+
+      - name: "Download dependencies"
+        run: go mod download
+
+      - name: "Verify dependencies"
+        run: go mod verify
+
+      - name: "Run tests"
+        run: go test -race -v -shuffle=on ./...

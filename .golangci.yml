@@ -1,0 +1,118 @@
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+  issues-exit-code: 1
+
+output:
+  formats:
+    - format: colored-line-number
+      path: stdout
+    - format: json
+      path: tmp/golangcilint.json
+    - format: checkstyle
+      path: tmp/golangcilint.xml
+    - format: html
+      path: tmp/golangcilint.html
+  show-stats: true
+
+linters:
+  enable:
+    - errcheck # check unchecked errors
+    - gosimple # simplifying code
+    - govet # go vet
+    - ineffassign # assigment to exists variables not used
+    - staticcheck # staticcheck instrument. Does lots of static checking
+    - unused # check unused entities
+    - asciicheck # code identifiers contains only ASCII
+    - bidichk # no dangerous Unicode sequence
+    - bodyclose # check HTTP-body closed
+    - canonicalheader # check is HTTP-headers in canonical format
+    - containedctx # check no structs contains context.Context field
+    - copyloopvar # loop variable should not be copied since Go 1.22
+    - cyclop # cyclomatic complexity of functions and packages
+    - decorder # declaration order and count of const, var, type and func
+    - dupl # code clone detection
+    - dupword # duplicated words in comments
+    - durationcheck # multiplier of duration (can be dangerous)
+    - err113 # check error handling
+    - errchkjson # check unsupported type and redundant error handling
+    - errname # sentinel error prefixed with the Err and error types suffixed with Error
+    - errorlint # code that will cause problems with the error wrapping
+    - exhaustive # is switch (and optionally map) cover all enum variants
+    - fatcontext # detect nested context in loop
+    - forcetypeassert # check is type assert success
+    - gocheckcompilerdirectives # check compiler directive (//go:) valid
+    - gocognit # check cognitive complexity
+    - goconst # put repeated strings to constant
+    - gocritic # lots of bugs, performance and style checking
+    - godot # comments end in a period
+    - godox # detect programmers keywords such a FIXME, TODO, BUG
+    - gofumpt # check is code strict gofmt-ed (can autofix)
+    - goprintffuncname # Printf-like functions name ends with f
+    - gosec # check security problems
+    - grouper # grouping expressions (import, const) check
+    - iface # incorrect usage of interface and interface pollution
+    - importas # enforce consistent import alias
+    - inamedparam # unnamed interface parameter
+    - interfacebloat # no fat interface
+    - intrange # replace fori cycle with for range N when possible (since Go 1.22)
+    - maintidx # check maintainable index
+    - makezero # slice for append must be initialized with zero len
+    - mirror # wrong mirror patterns of []byte/string usage
+    - misspell # misspelled english words
+    - mnd # magic number detector
+    - musttag # enforce field tags (un)marshalled structs
+    - nilerr # check is returned error is not nil if compared err != nil
+    - nilnil #check is returned value is not nil if returned error is nil
+    - noctx # http-requests must use context.Context
+    - nolintlint # is //nolint directive use correct
+    - paralleltest # use t.Parallel in tests
+    - prealloc # places where slices can be pre-allocated
+    - predeclared # find code that shadows one of predeclared Go identifiers
+    - promlinter # check prometheus metric name
+    - protogetter # getting field from protobuf message like m.GetField()
+    - reassign # reassign a top-level variable in another package
+    - recvcheck # check mixing of method receive type
+    - rowserrcheck # check handling rows.Err()
+    - spancheck # check OpenTelemetry/Census spans
+    - sqlclosecheck # close sql-entities (Rows, Stmt, Query, NamedStmt)
+    - tagliatelle # align struct tags
+    - tenv # replace os.Setenv to t.Setenv (for testing)
+    - testifylint # check and fix if possible usage of stretchr/testify
+    - testpackage # use a sepatate _test package for test
+    - thelper # check is t.Helper() method called in test help functions
+    # (if test failed - show line where help function called, not line in help function)
+    - tparallel # check is t.Parallel used effective
+    - unconvert # remove unnecessary type conversion
+    - usestdlibvars # detect where possible use Go constants
+    - wastedassign # detect wasted assigment
+    - whitespace # detect unnecessary newline at start and end of if, func, for, etc.
+    - wrapcheck # is error returned from external package are wrapped
+    - wsl # add or remove empty lines
+  disable:
+    - gci
+
+linters-settings:
+  errchkjson:
+    check-error-free-encoding: false
+  exhaustive:
+    check:
+      - switch
+      - map
+  gocognit:
+    min-complexity: 20
+  tagliatelle:
+    case:
+      rules:
+        json: camel
+        yaml: snake
+        xml: camel
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - wrapcheck
+  max-issues-per-linter: 0
+  fix: true
